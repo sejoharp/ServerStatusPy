@@ -44,7 +44,7 @@ class Backend(object):
         return self.__getTree().getElementsByTagName(attribute).item(0).firstChild.nodeValue
     
     def __getTree(self):
-        tree = parse("/home/joscha/workspace/ServerStatusPy/config.xml")
+        tree = parse("config.xml")
         return tree
         
         

@@ -67,6 +67,7 @@ class Gui(object):
         self.__win.show_all()
 
     def start(self):
+        gtk.gdk.threads_init()
         gtk.main()
 
         
