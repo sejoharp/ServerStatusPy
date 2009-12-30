@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-<!--	<address>10.1.1.143</address>-->
-	<address>10.1.1.152</address>
+	<address>10.1.1.143</address>
+<!--	<address>10.1.1.152</address> -->
 	<port>8080</port>
-<!--	<mac>00:1c:c0:b4:f8:79</mac>-->
-	<mac>00:01:2e:27:58:d4</mac>
-	<retries>10</retries>
+	<mac>00:1c:c0:b4:f8:79</mac>
+<!--	<mac>00:01:2e:27:58:d4</mac>-->
+	<retries>100</retries>
 </config>
