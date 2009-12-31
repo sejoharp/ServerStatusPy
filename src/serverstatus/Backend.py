@@ -2,11 +2,12 @@ from xml.dom.minidom import parse
 
 class Backend(object):
 
-    def __init__(self):
+    def __init__(self, configPath):
         self.__address = None
         self.__port = None
         self.__mac = None
         self.__retries = None
+        self.__configPath = configPath
     
     def getAddress(self):
         ret = None
@@ -44,7 +45,7 @@ class Backend(object):
         return self.__getTree().getElementsByTagName(attribute).item(0).firstChild.nodeValue
     
     def __getTree(self):
-        tree = parse("config.xml")
+        tree = parse(self.__configPath)
         return tree
         
         

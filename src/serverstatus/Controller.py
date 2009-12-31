@@ -9,8 +9,8 @@ import time
 
 class Controller(object):
     
-    def __init__(self): 
-        self.__backend = Backend.Backend()
+    def __init__(self, configPath): 
+        self.__backend = Backend.Backend(configPath)
         self.__gui = Gui.Gui(self)
         self.__gui.setStatus(Controller.ping(self.__getAddressTuple()))
         self.__gui.start()
@@ -101,7 +101,8 @@ class Controller(object):
             # Construct a six-byte hardware address
         
             addr_byte = self.__mac.split(':')
-            hw_addr = struct.pack('BBBBBB', int(addr_byte[0], 16),
+            hw_addr = struct.pack('BBBBBB', 
+            int(addr_byte[0], 16),
             int(addr_byte[1], 16),
             int(addr_byte[2], 16),
             int(addr_byte[3], 16),
@@ -120,4 +121,11 @@ class Controller(object):
             s.close()
     
 if __name__ == "__main__":
-    Controller()
+    if len(sys.argv) < 2 or sys.argv[1].__contains__("--config=") == False:
+        print("need --config=[path to config]")
+    else:
+        configPath = sys.argv[1].strip("--config=")
+        if configPath is None or len(configPath) == 0:
+            print("you need to add the configfile path")
+        else:
+            Controller(configPath)

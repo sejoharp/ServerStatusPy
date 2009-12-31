@@ -70,13 +70,11 @@ class Gui(object):
         grid.attach(self.__textSpace,1,2,1,2)
         grid.attach(self.__buttonToggle,0,2,2,3)
         grid.attach(labelStatus,0,1,0,1)
-        grid.attach(labelSpace,0,1,1,2)
-        
+        grid.attach(labelSpace,0,1,1,2)       
         self.__win.add(grid)
-        
-        self.__win.show_all()
 
     def start(self):
+        self.__win.show_all()
         gtk.gdk.threads_init()
         gtk.main()
 
