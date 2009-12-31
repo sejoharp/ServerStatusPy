@@ -5,7 +5,6 @@ Created on Dec 25, 2009
 '''
 import gtk
 import pygtk
-import sys
 pygtk.require('2.0')
 
 class Gui(object):
@@ -13,19 +12,25 @@ class Gui(object):
     classdocs
     '''
 
-    def setStatus(self, status, space = None):
+    def setStatus(self, status):
         if status == True:
             self.__textStatus.set_text("online")
             self.__buttonToggle.set_label("shutdown")
-            self.__textSpace.set_label(space)
+            self.__textSpace.set_label(self.__getFormatedAvailableSpace())
         else:
             self.__textStatus.set_text("offline")
             self.__buttonToggle.set_label("wake up")
-            self.__textSpace.set_label("unkown")
+            self.__textSpace.set_label("unknown")
             
-    def setServerStatus(self, msg):
-        self.__textStatus.set_text(msg)
+    def setStatusWakeupFailed(self):
+        self.__textStatus.set_text("wakeup failed")
+        
+    def setStatusWhileWakingUp(self, count):
+        self.__textStatus.set_text("waking up (" + str(count) + ")")
     
+    def __getFormatedAvailableSpace(self):
+        return str(int(self.__controller.getFreeSpace()) / (1024 * 1024 * 1024)) + " GB"
+        
     def enableButton(self, available):
         self.__buttonToggle.set_sensitive(available)
         
@@ -33,8 +38,7 @@ class Gui(object):
         self.__textSpace.set_text(space)
     
     def __destroy(self, widget, data=None):
-        gtk.main_quit()
-        sys.exit(0)
+        self.__controller.exitProgam()
   
     def __init__(self, controller): 
         self.__controller = controller 

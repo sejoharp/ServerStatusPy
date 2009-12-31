@@ -2,6 +2,7 @@ import Backend
 import Gui
 import socket
 import struct
+import sys
 import threading
 import time
 
@@ -11,38 +12,36 @@ class Controller(object):
     def __init__(self): 
         self.__backend = Backend.Backend()
         self.__gui = Gui.Gui(self)
-        self.__setGuiState(Controller.ping(self.__getAddressTuple()))
+        self.__gui.setStatus(Controller.ping(self.__getAddressTuple()))
         self.__gui.start()
             
     def toggleServerState(self, widget, data=None):
         if Controller.ping(self.__getAddressTuple()) == True:
             self.__shutdownServer()
+            self.exitProgam()
         else:
             thread = self.WakeupWaitingThread(self.__gui, int(self.__backend.getRetries()), self.__getAddressTuple(), self.__backend.getMac())
             thread.start()
             #thread.join()
     
-    def __setGuiState(self, available):
-        if available == True:
-            self.__gui.setStatus(True, str(int(self.__getFreeSpace()) / (1024 * 1024 * 1024)) + " GB")
-        else:
-            self.__gui.setStatus(False)
-    
+    def exitProgam(self):
+        sys.exit(0)
+        
     @staticmethod    
     def ping(addressTuple):   
         try:
-            s = socket.create_connection(addressTuple, 5)
+            s = socket.create_connection(addressTuple, 1)
             s.close()
             available = True
         except socket.error:
             available = False
         return available      
     
-    def __getFreeSpace(self):
+    def getFreeSpace(self):
         space = None
         try:
             s = self.__getConnection()
-            s.send(str(2)+ "\n")
+            s.send(str(2) + "\n")
             space = s.recv(128)
             s.close()
         except socket.error: 
@@ -84,12 +83,12 @@ class Controller(object):
             while (self.__retries > 0) and (available == False):
                 available = Controller.ping(self.__addressTuple)
                 self.__retries = self.__retries - 1
-                self.__gui.setServerStatus("waking up (" + str(self.__retries) + ")")
+                self.__gui.setStatusWhileWakingUp(self.__retries)
                 time.sleep(1)
             if available == False:
-                self.__gui.setServerStatus("wakeup failed")
+                self.__gui.setStatusWakeupFailed()
             else:
-                self.__setGuiState(True)
+                self.__gui.setStatus(True)
             self.__gui.enableButton(True)
         
         # Wake-On-LAN
