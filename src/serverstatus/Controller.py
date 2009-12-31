@@ -15,7 +15,7 @@ class Controller(object):
         self.__gui.start()
             
     def toggleServerState(self, widget, data=None):
-        if self.ping(self.__getAddressTuple()) == True:
+        if Controller.ping(self.__getAddressTuple()) == True:
             self.__shutdownServer()
         else:
             thread = self.WakeupWaitingThread(self.__gui, int(self.__backend.getRetries()), self.__getAddressTuple(), self.__backend.getMac())
@@ -24,7 +24,7 @@ class Controller(object):
     
     def __setGuiState(self, available):
         if available == True:
-            self.__gui.setStatus(True, self.__getFreeSpace() / (1024 * 1024 * 1024) + " GB")
+            self.__gui.setStatus(True, str(int(self.__getFreeSpace()) / (1024 * 1024 * 1024)) + " GB")
         else:
             self.__gui.setStatus(False)
     
@@ -42,8 +42,8 @@ class Controller(object):
         space = None
         try:
             s = self.__getConnection()
-            s.send(2)
-            space = s.recv(4096)
+            s.send(str(2)+ "\n")
+            space = s.recv(128)
             s.close()
         except socket.error: 
             space = None
@@ -52,7 +52,7 @@ class Controller(object):
     def __shutdownServer(self):
         try:
             s = self.__getConnection()
-            s.send(1)
+            s.send(str(1)+ "\n")
             s.close()
         except socket.error: 
             pass
@@ -63,7 +63,7 @@ class Controller(object):
         return s
           
     def __getAddressTuple(self):
-        return self.__backend.getAddress(), self.__backend.getPort()
+        return self.__backend.getAddress(), int(self.__backend.getPort())
     
     class WakeupWaitingThread(threading.Thread):
         

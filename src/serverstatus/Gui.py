@@ -47,6 +47,7 @@ class Gui(object):
         self.__textStatus = gtk.Label()
         self.__buttonToggle.connect("clicked", self.__controller.toggleServerState, None)
         self.__win.connect("destroy", self.__destroy)
+        self.__win.set_title("ServerStatusPy")
         
         ###
         ##  This grid:
